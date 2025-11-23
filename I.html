@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>您的名字 - 个人主页</title>
+    <style>
+        /* ============================
+         核心变量与全局设置 (Core Variables & Reset)
+         ============================
+        */
+        :root {
+            --apple-dark-bg: #000000;
+            --apple-light-bg: #ffffff;
+            --apple-grey-bg: #f5f5f7;
+            --apple-dark-grey-text: #86868b;
+            --apple-light-text: #f5f5f7;
+            --apple-link-blue: #2997ff;
+            --nav-height: 48px;
+            /* 使用系统默认的无衬线字体，最接近苹果原生体验 */
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--apple-light-bg);
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased; /* 让字体在 Mac 上更平滑 */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        /* 通用链接样式 (带箭头) */
+        .cta-link {
+            color: var(--apple-link-blue);
+            font-size: 17px;
+            font-weight: 600;
+        }
+        .cta-link::after {
+            content: ' ›';
+            font-size: 20px;
+            position: relative;
+            top: 1px;
+            transition: margin-left 0.2s ease;
+        }
+        .cta-link:hover::after {
+            margin-left: 5px;
+        }
+
+        /* ============================
+         导航栏 (The "Glass" Navigation)
+         ============================
+        */
+        .global-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--nav-height);
+            z-index: 999;
+            /* 核心：苹果风磨砂玻璃效果 */
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            font-weight: 600;
+            font-size: 20px;
+            color: var(--apple-light-text);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-size: 12px;
+            color: #e8e8ed;
+            opacity: 0.8;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: #fff;
+        }
+
+        /* ============================
+         首屏 Hero Section (深色主题)
+         ============================
+        */
+        .hero-section {
+            background-color: var(--apple-dark-bg);
+            color: var(--apple-light-text);
+            /* 减去导航栏高度，保证内容居中 */
+            min-height: calc(100vh - var(--nav-height));
+            margin-top: var(--nav-height);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 让文本稍微靠上一点，符合苹果视觉习惯 */
+            justify-content: flex-start; 
+            padding-top: 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-size: 56px;
+            line-height: 1.07143;
+            font-weight: 700;
+            letter-spacing: -0.005em;
+            margin-bottom: 10px;
+        }
+
+        .hero-content h2 {
+            font-size: 28px;
+            line-height: 1.10722;
+            font-weight: 400;
+            letter-spacing: 0.004em;
+            margin-bottom: 20px;
+            color: #a1a1a6;
+        }
+
+        .hero-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        /* * 核心：替换这里的图片地址。
+         * 找一张高质量、背景干净（最好是黑色）的个人照片或代表作。
+         * 图片应该非常大，横向铺满。
+         */
+        .hero-image-container {
+            margin-top: 50px;
+            width: 90%;
+            max-width: 1200px;
+            height: 600px; /* 根据你的图片调整高度 */
+            background-image: url('https://placehold.co/1920x1080/1a1a1a/FFFFFF/png?text=Your+High-Res+Photo+Here'); /* 占位图 */
+            background-size: cover;
+            background-position: center;
+            /* 苹果风格：轻微的圆角 */
+            border-radius: 20px; 
+        }
+
+        /* ============================
+         网格展示区 (The Grid System)
+         ============================
+        */
+        .grid-section {
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .grid-container {
+            display: grid;
+            /* 响应式网格：屏幕宽时双列，窄时单列 */
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            height: 600px;
+            /* 苹果风格：大圆角卡片 */
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px;
+            transition: transform 0.3s ease;
+        }
+        
+        .grid-item:hover {
+            /* 鼠标悬停轻微放大 */
+            transform: scale(1.01);
+        }
+
+        /* 深色卡片风格 */
+        .item-dark {
+            background-color: black;
+            color: white;
+        }
+        
+        /* 浅色卡片风格 */
+        .item-light {
+            background-color: var(--apple-grey-bg);
+            color: black;
+        }
+
+        .grid-text h3 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .grid-text p {
+            font-size: 21px;
+            margin-bottom: 20px;
+            color: var(--apple-dark-grey-text);
+        }
+        
+        /* 卡片内的图片占位符 */
+        .grid-image-placeholder {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+
+        /* ============================
+         极简页脚 (Footer)
+         ============================
+        */
+        footer {
+            background-color: var(--apple-grey-bg);
+            padding: 40px 20px;
+            font-size: 12px;
+            color: var(--apple-dark-grey-text);
+            text-align: center;
+        }
+        
+        .footer-content {
+             max-width: 1000px;
+             margin: 0 auto;
+        }
+        
+        .footer-links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* ============================
+         移动端适配 (Mobile Responsiveness)
+         ============================
+        */
+        @media (max-width: 768px) {
+            .nav-links {
+                /* 移动端简化：暂时隐藏菜单链接，实际开发中需用JS实现汉堡菜单 */
+                display: none;
+            }
+            
+            .hero-content h1 {
+                font-size: 40px;
+            }
+            
+            .hero-content h2 {
+                font-size: 22px;
+            }
+            
+            .hero-image-container {
+                height: 300px;
+                border-radius: 12px;
+            }
+            
+            .grid-container {
+                grid-template-columns: 1fr; /* 强制单列 */
+            }
+            
+            .grid-item {
+                height: 500px;
+                border-radius: 16px;
+            }
+             .grid-text h3 {
+                font-size: 32px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="global-nav">
+        <nav class="nav-content">
+            <a href="#" class="nav-logo">Your Name</a>
+            
+            <div class="nav-links">
+                <a href="#work">作品 / Work</a>
+                <a href="#skills">技能 / Skills</a>
+                <a href="#about">关于 / About</a>
+                <a href="#contact">联系 / Contact</a>
+            </div>
+            <div></div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>你好，我是 [您的名字]</h1>
+                <h2>设计师 · 开发者 · 创意工作者</h2>
+                
+                <div class="hero-links">
+                    <a href="#work" class="cta-link">查看我的作品</a>
+                    <a href="#contact" class="cta-link">与我联系</a>
+                </div>
+            </div>
+            
+            <div class="hero-image-container" style="background-image: url('https://placehold.co/1920x1080/1a1a1a/FFFFFF/png?text=Replace+With+Your+Hero+Image');">
+            </div>
+        </section>
+
+        <section class="grid-section" id="work">
+            <div class="grid-container">
+                
+                <div class="grid-item item-dark">
+                    <div class="grid-text">
+                        <h3>最新项目 A</h3>
+                        <p>一个改变游戏规则的应用。</p>
+                        <a href="#" class="cta-link">了解详细信息</a>
+                    </div>
+                    <div class="grid-image-placeholder" style="background-image: url('https://placehold.co/800x600/333333/FFFFFF/png?text=Project+A+Image');"></div>
+                </div>
+
+                <div class="grid-item item-light">
+                    <div class="grid-text">
+                        <h3>核心技能 B</h3>
+                        <p>不仅仅是代码，更是艺术。</p>
+                        <a href="#" class="cta-link">看看我是怎么做的</a>
+                    </div>
+                    <div class="grid-image-placeholder" style="background-image: url('https://placehold.co/800x600/dddddd/000000/png?text=Skill+B+Image');"></div>
+                </div>
+
+                 <div class="grid-item item-light">
+                    <div class="grid-text">
+                        <h3>摄影作品 C</h3>
+                        <p>捕捉瞬间的光影。</p>
+                        <a href="#" class="cta-link">浏览图库</a>
+                    </div>
+                    <div class="grid-image-placeholder" style="background-image: url('https://placehold.co/800x600/dddddd/000000/png?text=Photography+Image');"></div>
+                </div>
+
+                <div class="grid-item item-dark">
+                    <div class="grid-text">
+                        <h3>关于我</h3>
+                        <p>极简主义践行者。</p>
+                        <a href="#about" class="cta-link">阅读我的故事</a>
+                    </div>
+                     <div class="grid-image-placeholder" style="background-image: url('https://placehold.co/800x600/333333/FFFFFF/png?text=About+Me+Image');"></div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <p>Copyright © 2023 [您的名字]. 保留所有权利。</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Sales Policy</a>
+                <a href="#">Legal</a>
+                <a href="#">Site Map</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
